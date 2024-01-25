@@ -2,21 +2,21 @@ import { exec } from '@actions/exec'
 import { ExecOptions } from '@actions/exec/lib/interfaces'
 
 export default async function execWithResult(commandLine: string, args?: string[], options?: ExecOptions): Promise<Result> {
+
   let result: Result = new Result()
-  let exitCode = await exec(commandLine, args, {
-    ...options,
-    listeners: {
-      stdout: (data: Buffer) => {
-        result.stdout += data.toString()
-      },
-      stderr: (data: Buffer) => {
-        result.stderr += data.toString()
-      }
-    }
-  })
-  result.stdout = result.stdout.trim()
-  result.stderr = result.stderr.trim()
-  result.exitCode = exitCode
+  let commands = commandLine.replace( /&& \\\n/m, '&& ' ).split("\n");
+  for (const command of commands) {
+    let exitCode = await exec.exec('bash', ['-c', command], options);
+
+    result.stdout += result.stdout.trim()
+    result.stderr += result.stderr.trim()
+    result.exitCode = exitCode
+
+    if (exitCode !== 0) {
+      // If a command fails, break the loop and return the result
+      break;
+    }  
+  }
 
   return result
 }

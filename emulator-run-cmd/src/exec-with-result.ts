@@ -11,12 +11,15 @@ export default async function execWithResult(commandLine: string, args?: string[
       return !value.startsWith('#') && value.length > 0;
   });
 
-  console.log({commands})
+  const splitCommands = commandLine.replace( /&& \\\n/m, '&& ' ).split("\n");
+  console.log({splitCommands})
 
   let result: Result = new Result()
   
   for (const command of commands) {
-    let exitCode = await exec(command);
+    console.log({command})
+
+    let exitCode = await exec('sh', ['-c', command], options);
 
     result.stdout += result.stdout.trim()
     result.stderr += result.stderr.trim()

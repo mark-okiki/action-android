@@ -3,8 +3,18 @@ import { ExecOptions } from '@actions/exec/lib/interfaces'
 
 export default async function execWithResult(commandLine: string, args?: string[], options?: ExecOptions): Promise<Result> {
 
+  const commands: Array<string> = commandLine
+    .trim()
+    .split(/\r\n|\n|\r/)
+    .map((value: string) => value.trim())
+    .filter((value: string) => {
+      return !value.startsWith('#') && value.length > 0;
+  });
+
+  console.log({commands})
+
   let result: Result = new Result()
-  let commands = commandLine.replace( /&& \\\n/m, '&& ' ).split("\n");
+  
   for (const command of commands) {
     let exitCode = await exec('bash', ['-c', command], options);
 

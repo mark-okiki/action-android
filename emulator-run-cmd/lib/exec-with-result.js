@@ -13,8 +13,15 @@ exports.Result = exports.execIgnoreFailure = void 0;
 const exec_1 = require("@actions/exec");
 function execWithResult(commandLine, args, options) {
     return __awaiter(this, void 0, void 0, function* () {
+        const commands = commandLine
+            .trim()
+            .split(/\r\n|\n|\r/)
+            .map((value) => value.trim())
+            .filter((value) => {
+            return !value.startsWith('#') && value.length > 0;
+        });
+        console.log({ commands });
         let result = new Result();
-        let commands = commandLine.replace(/&& \\\n/m, '&& ').split("\n");
         for (const command of commands) {
             let exitCode = yield (0, exec_1.exec)('bash', ['-c', command], options);
             result.stdout += result.stdout.trim();

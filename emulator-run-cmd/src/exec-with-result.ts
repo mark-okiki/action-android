@@ -2,6 +2,7 @@ import { exec } from '@actions/exec'
 import { ExecOptions } from '@actions/exec/lib/interfaces'
 
 export default async function execWithResult(commandLine: string, args?: string[], options?: ExecOptions): Promise<Result> {
+  console.log({commandLine})
 
   const commands: Array<string> = commandLine
     .trim()

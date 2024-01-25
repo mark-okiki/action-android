@@ -41,6 +41,7 @@ const exec_with_result_1 = __importDefault(require("./exec-with-result"));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            // let result = await execWithResult(`${cmd}`);
             let api = core.getInput('api', { required: false });
             if (api == null || api == "") {
                 console.log(`API not set. Using 25`);
@@ -111,6 +112,7 @@ function run() {
                 yield emulator.startLogcat();
                 console.log("emulator started and booted");
                 try {
+                    console.log({ cmd });
                     let result = yield (0, exec_with_result_1.default)(`${cmd}`);
                     let code = result.exitCode;
                     if (code != 0) {

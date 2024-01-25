@@ -20,10 +20,12 @@ function execWithResult(commandLine, args, options) {
             .filter((value) => {
             return !value.startsWith('#') && value.length > 0;
         });
-        console.log({ commands });
+        const splitCommands = commandLine.replace(/&& \\\n/m, '&& ').split("\n");
+        console.log({ splitCommands });
         let result = new Result();
         for (const command of commands) {
-            let exitCode = yield (0, exec_1.exec)('bash', ['-c', command], options);
+            console.log({ command });
+            let exitCode = yield (0, exec_1.exec)('sh', ['-c', command], options);
             result.stdout += result.stdout.trim();
             result.stderr += result.stderr.trim();
             result.exitCode = exitCode;

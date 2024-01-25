@@ -117,8 +117,7 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
         await execIgnoreFailure(`bash -c \\\"${this.androidHome()}/cmdline-tools/latest/bin/sdkmanager 'platforms;android-${api}'${args}"`)
     }
 
-    async createEmulator(name: string, api: string, tag: string, abi: string, hardwareProfile: string): Promise<any> {
-        this.listEmulators()
+    async createEmulator(name: string, api: string, tag: string, abi: string, hardwareProfile: string): Promise<any> {       
         let additionalOptions = ""
         if (hardwareProfile != null && hardwareProfile != "") {
             additionalOptions += `--device ${hardwareProfile}`

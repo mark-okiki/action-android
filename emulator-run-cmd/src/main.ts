@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import {InputOptions} from "@actions/core/lib/core";
 import {SdkFactory} from "./sdk";
-import execWithResult from "./exec-with-result";
+import execWithResult, { execIgnoreFailure }  from "./exec-with-result";
 
 async function run() {
     try {
@@ -72,6 +72,7 @@ async function run() {
                 return
             }
 
+            await execIgnoreFailure(`avdmanager list`);
             let emulator = await sdk.createEmulator("emulator", api, tag, abi, hardwareProfile);
             console.log("starting adb server")
             await sdk.startAdbServer()
@@ -90,6 +91,7 @@ async function run() {
             await emulator.startLogcat()
 
             console.log("emulator started and booted")
+            await execIgnoreFailure(`adb shell settings put system font_scale 0.85`);
             try {
                 let result = await execWithResult(`${cmd}`);
                 let code = result.exitCode;

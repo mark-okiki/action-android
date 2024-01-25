@@ -20,18 +20,36 @@ function execWithResult(commandLine, args, options) {
             .filter((value) => {
             return !value.startsWith('#') && value.length > 0;
         });
-        const splitCommands = commandLine.replace(/&& \\\n/m, '&& ').split("\n");
-        console.log({ splitCommands });
+        console.log({ commands });
+        // const splitCommands = commandLine.replace( /&& \\\n/m, '&& ' ).split("\n");
+        // console.log({splitCommands})
         let result = new Result();
-        for (const command of commands) {
-            console.log({ command });
-            let exitCode = yield (0, exec_1.exec)('sh', ['-c', command], options);
-            result.stdout += result.stdout.trim();
-            result.stderr += result.stderr.trim();
+        if (commands.length === 1) {
+            console.log('Single command');
+            let exitCode = yield (0, exec_1.exec)(commandLine, args, Object.assign(Object.assign({}, options), { listeners: {
+                    stdout: (data) => {
+                        result.stdout += data.toString();
+                    },
+                    stderr: (data) => {
+                        result.stderr += data.toString();
+                    }
+                } }));
+            result.stdout = result.stdout.trim();
+            result.stderr = result.stderr.trim();
             result.exitCode = exitCode;
-            if (exitCode !== 0) {
-                // If a command fails, break the loop and return the result
-                break;
+        }
+        else {
+            console.log('Multiple commands');
+            for (const command of commands) {
+                console.log({ command });
+                let exitCode = yield (0, exec_1.exec)('sh', ['-c', command], options);
+                result.stdout += result.stdout.trim();
+                result.stderr += result.stderr.trim();
+                result.exitCode = exitCode;
+                if (exitCode !== 0) {
+                    // If a command fails, break the loop and return the result
+                    break;
+                }
             }
         }
         return result;

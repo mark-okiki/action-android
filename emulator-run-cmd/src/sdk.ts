@@ -118,12 +118,13 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
     }
 
     async createEmulator(name: string, api: string, tag: string, abi: string, hardwareProfile: string): Promise<any> {
+        this.listEmulators()
         let additionalOptions = ""
         if (hardwareProfile != null && hardwareProfile != "") {
             additionalOptions += `--device ${hardwareProfile}`
         }
 
-        await execIgnoreFailure(`bash -c \\\"echo -n no | ${this.androidHome()}/cmdline-tools/latest/bin/avdmanager create avd -n ${name} --package \\\"system-images;android-${api};${tag};${abi}\\\" --tag ${tag}\" ${additionalOptions}`)
+        await execIgnoreFailure(`bash -c \\\"echo -n no | ${this.androidHome()}/cmdline-tools/latest/bin/avdmanager create avd -n ${name} --force --package \\\"system-images;android-${api};${tag};${abi}\\\" --tag ${tag}\" ${additionalOptions}`)
         return new Emulator(this, name, api, abi, tag, this.portCounter++, this.portCounter++)
     }
 

@@ -5,9 +5,6 @@ import execWithResult from "./exec-with-result";
 
 async function run() {
     try {
-
-        // let result = await execWithResult(`${cmd}`);
-
         let api = core.getInput('api', <InputOptions>{required: false});
         if (api == null || api == "") {
             console.log(`API not set. Using 25`)
@@ -94,8 +91,6 @@ async function run() {
 
             console.log("emulator started and booted")
             try {
-                console.log({cmd})
-
                 let result = await execWithResult(`${cmd}`);
                 let code = result.exitCode;
                 if (code != 0) {

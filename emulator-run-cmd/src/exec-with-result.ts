@@ -10,7 +10,7 @@ export default async function execWithResult(commandLine: string, args?: string[
       return !value.startsWith('#') && value.length > 0;
   });
 
-  console.log({commands})
+  //console.log({commands})
 
   // const splitCommands = commandLine.replace( /&& \\\n/m, '&& ' ).split("\n");
   // console.log({splitCommands})
@@ -18,7 +18,7 @@ export default async function execWithResult(commandLine: string, args?: string[
   let result: Result = new Result()
 
   if (commands.length === 1) {
-    console.log('Single command')
+    // console.log('Single command')
     let exitCode = await exec(commandLine, args, {
         ...options,
         listeners: {
@@ -35,7 +35,7 @@ export default async function execWithResult(commandLine: string, args?: string[
     result.exitCode = exitCode
 
   } else {
-    console.log('Multiple commands')
+    // console.log('Multiple commands')
     for (const command of commands) {
       console.log({command})
       let exitCode = await exec('sh', ['-c', command], options);

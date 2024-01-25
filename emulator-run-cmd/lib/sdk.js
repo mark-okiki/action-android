@@ -115,11 +115,12 @@ class BaseAndroidSdk {
     }
     createEmulator(name, api, tag, abi, hardwareProfile) {
         return __awaiter(this, void 0, void 0, function* () {
+            this.listEmulators();
             let additionalOptions = "";
             if (hardwareProfile != null && hardwareProfile != "") {
                 additionalOptions += `--device ${hardwareProfile}`;
             }
-            yield (0, exec_with_result_1.execIgnoreFailure)(`bash -c \\\"echo -n no | ${this.androidHome()}/cmdline-tools/latest/bin/avdmanager create avd -n ${name} --package \\\"system-images;android-${api};${tag};${abi}\\\" --tag ${tag}\" ${additionalOptions}`);
+            yield (0, exec_with_result_1.execIgnoreFailure)(`bash -c \\\"echo -n no | ${this.androidHome()}/cmdline-tools/latest/bin/avdmanager create avd -n ${name} --force --package \\\"system-images;android-${api};${tag};${abi}\\\" --tag ${tag}\" ${additionalOptions}`);
             return new emulator_1.Emulator(this, name, api, abi, tag, this.portCounter++, this.portCounter++);
         });
     }

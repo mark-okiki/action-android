@@ -16,7 +16,7 @@ export default async function execWithResult(commandLine: string, args?: string[
   let result: Result = new Result()
   
   for (const command of commands) {
-    let exitCode = await exec('bash', ['-c', command], options);
+    let exitCode = await exec(command);
 
     result.stdout += result.stdout.trim()
     result.stderr += result.stderr.trim()

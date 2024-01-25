@@ -1,6 +1,6 @@
 {
   "name": "android-action",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "Android GitHub Actions",
   "main": "lib/main.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Malinskiy/action-android.git"
+    "url": "git+https://github.com/mark-okiki/action-android.git"
   },
   "keywords": [
     "actions",
     "node",
     "setup"
   ],
-  "author": "Malinskiy",
+  "author": "Mark Okiki",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.6",

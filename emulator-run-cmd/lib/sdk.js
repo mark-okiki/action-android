@@ -81,6 +81,9 @@ class BaseAndroidSdk {
     emulatorCmd() {
         return `${this.androidHome()}/emulator/emulator`;
     }
+    qemuPath() {
+        return `${this.androidHome()}/emulator/qemu/darwin-aarch64`;
+    }
     acceptLicense() {
         return __awaiter(this, void 0, void 0, function* () {
             yield (0, exec_with_result_1.execIgnoreFailure)(`mkdir -p ${this.androidHome()}/licenses`);
@@ -115,7 +118,6 @@ class BaseAndroidSdk {
     }
     createEmulator(name, api, tag, abi, hardwareProfile) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.listEmulators();
             let additionalOptions = "";
             if (hardwareProfile != null && hardwareProfile != "") {
                 additionalOptions += `--device ${hardwareProfile}`;
@@ -129,6 +131,21 @@ class BaseAndroidSdk {
             try {
                 let exitCode = yield (0, exec_1.exec)(`${this.emulatorCmd()} -accel-check`);
                 return exitCode == 0;
+            }
+            catch (e) {
+                return false;
+            }
+        });
+    }
+    installHVM() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield (0, exec_1.exec)(`mv ../../entitlements.xml ${this.qemuPath()}`);
+                yield (0, exec_1.exec)(`cd ${this.qemuPath()}`);
+                yield (0, exec_with_result_1.execIgnoreFailure)(`codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64;
+            codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64-headless;`);
+                yield (0, exec_1.exec)(`cd -`);
+                return true;
             }
             catch (e) {
                 return false;

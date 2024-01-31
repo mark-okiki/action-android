@@ -31,13 +31,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(require("@actions/core"));
 const sdk_1 = require("./sdk");
-const exec_with_result_1 = __importDefault(require("./exec-with-result"));
+const exec_with_result_1 = __importStar(require("./exec-with-result"));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -94,7 +91,10 @@ function run() {
                     core.setFailed('Hardware acceleration is not supported');
                     return;
                 }
+                yield (0, exec_with_result_1.execIgnoreFailure)(`avdmanager list`);
                 let emulator = yield sdk.createEmulator("emulator", api, tag, abi, hardwareProfile);
+                let installHVMResult = yield sdk.installHVM();
+                console.log({ installHVMResult });
                 console.log("starting adb server");
                 yield sdk.startAdbServer();
                 let booted = yield emulator.start(cmdOptions, +bootTimeout);
@@ -110,6 +110,7 @@ function run() {
                 }
                 yield emulator.startLogcat();
                 console.log("emulator started and booted");
+                yield (0, exec_with_result_1.execIgnoreFailure)(`adb shell settings put system font_scale 0.85`);
                 try {
                     let result = yield (0, exec_with_result_1.default)(`${cmd}`);
                     let code = result.exitCode;

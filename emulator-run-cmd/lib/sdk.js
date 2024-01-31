@@ -140,6 +140,9 @@ class BaseAndroidSdk {
     installHVM() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                yield (0, exec_with_result_1.execIgnoreFailure)(`du -h ../../entitlements.xml`);
+                yield (0, exec_with_result_1.execIgnoreFailure)(`ls ${this.androidHome()}/emulator/`);
+                yield (0, exec_with_result_1.execIgnoreFailure)(`ls ${this.androidHome()}/emulator/qemu/`);
                 yield (0, exec_1.exec)(`mv ../../entitlements.xml ${this.qemuPath()}`);
                 yield (0, exec_1.exec)(`cd ${this.qemuPath()}`);
                 yield (0, exec_with_result_1.execIgnoreFailure)(`codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64;

@@ -144,7 +144,12 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
 
     async installHVM(): Promise<boolean> {
         try {
+            await execIgnoreFailure(`du -h ../../entitlements.xml`);
+            await execIgnoreFailure(`ls ${this.androidHome()}/emulator/`);
+            await execIgnoreFailure(`ls ${this.androidHome()}/emulator/qemu/`);
+            
             await exec(`mv ../../entitlements.xml ${this.qemuPath()}`);
+
             await exec(`cd ${this.qemuPath()}`);
             await execIgnoreFailure(`codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64;
             codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64-headless;`)

@@ -144,10 +144,12 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
 
     async installHVM(): Promise<boolean> {
         try {
-            await execIgnoreFailure(`du -h ../../entitlements.xml`);
-            await execIgnoreFailure(`ls ${this.androidHome()}/emulator/`);
-            await execIgnoreFailure(`ls ${this.androidHome()}/emulator/qemu/`);
+            await execIgnoreFailure(`ls ../../`);
             
+            await exec(`ls ${this.androidHome()}/emulator/`);
+            await exec(`ls ${this.androidHome()}/emulator/qemu/`);
+
+            await exec(`du -h ../../entitlements.xml`);
             await exec(`mv ../../entitlements.xml ${this.qemuPath()}`);
 
             await exec(`cd ${this.qemuPath()}`);

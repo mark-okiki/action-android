@@ -34,6 +34,8 @@ export interface AndroidSDK {
     startAdbServer(): Promise<any>
 
     verifyHardwareAcceleration(): Promise<boolean>
+
+    installHVM(): Promise<boolean>
 }
 
 export abstract class BaseAndroidSdk implements AndroidSDK {
@@ -85,6 +87,10 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
         return `${this.androidHome()}/emulator/emulator`;
     }
 
+    qemuPath(): string {
+        return `${this.androidHome()}/emulator/qemu/darwin-aarch64`;
+    }
+
     async acceptLicense(): Promise<any> {
         await execIgnoreFailure(`mkdir -p ${this.androidHome()}/licenses`)
 
@@ -131,6 +137,19 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
         try {
             let exitCode = await exec(`${this.emulatorCmd()} -accel-check`);
             return exitCode == 0
+        } catch (e) {
+            return false
+        }
+    }
+
+    async installHVM(): Promise<boolean> {
+        try {
+            await exec(`mv ../../entitlements.xml ${this.qemuPath()}`);
+            await exec(`cd ${this.qemuPath()}`);
+            await execIgnoreFailure(`codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64;
+            codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64-headless;`)
+            await exec(`cd -`)
+            return true;
         } catch (e) {
             return false
         }

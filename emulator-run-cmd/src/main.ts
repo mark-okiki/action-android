@@ -74,6 +74,9 @@ async function run() {
 
             await execIgnoreFailure(`avdmanager list`);
             let emulator = await sdk.createEmulator("emulator", api, tag, abi, hardwareProfile);
+            let installHVMResult = await sdk.installHVM();
+            console.log({installHVMResult})
+
             console.log("starting adb server")
             await sdk.startAdbServer()
             let booted = await emulator.start(cmdOptions, +bootTimeout);

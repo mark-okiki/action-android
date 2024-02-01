@@ -166,8 +166,10 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
             this.createHyperVisorEntitlement();
             await exec(`du -h entitlements.xml`);
 
-            await execIgnoreFailure(`codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64;
-            codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64-headless;`)
+            await exec(`ls`);
+
+            await execIgnoreFailure(`codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64-headless;
+            codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64;`)
             await exec(`cd -`)
             return true;
         } catch (e) {

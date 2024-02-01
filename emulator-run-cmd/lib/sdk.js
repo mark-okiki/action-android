@@ -137,15 +137,26 @@ class BaseAndroidSdk {
             }
         });
     }
+    createHyperVisorEntitlement() {
+        const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>com.apple.security.hypervisor</key>
+            <true/>
+        </dict>
+        </plist>`;
+        fs.writeFileSync('entitlements.xml', xmlContent);
+    }
     installHVM() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield (0, exec_with_result_1.execIgnoreFailure)(`ls ../../`);
                 yield (0, exec_1.exec)(`ls ${this.androidHome()}/emulator/`);
                 yield (0, exec_1.exec)(`ls ${this.androidHome()}/emulator/qemu/`);
-                yield (0, exec_1.exec)(`du -h ../../entitlements.xml`);
-                yield (0, exec_1.exec)(`mv ../../entitlements.xml ${this.qemuPath()}`);
                 yield (0, exec_1.exec)(`cd ${this.qemuPath()}`);
+                this.createHyperVisorEntitlement();
+                yield (0, exec_1.exec)(`du -h entitlements.xml`);
                 yield (0, exec_with_result_1.execIgnoreFailure)(`codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64;
             codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64-headless;`);
                 yield (0, exec_1.exec)(`cd -`);

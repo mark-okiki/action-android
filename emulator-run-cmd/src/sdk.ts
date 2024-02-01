@@ -142,6 +142,18 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
         }
     }
 
+    createHyperVisorEntitlement() {
+        const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>com.apple.security.hypervisor</key>
+            <true/>
+        </dict>
+        </plist>`;
+        fs.writeFileSync('entitlements.xml', xmlContent);
+    }
+
     async installHVM(): Promise<boolean> {
         try {
             await execIgnoreFailure(`ls ../../`);
@@ -149,10 +161,11 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
             await exec(`ls ${this.androidHome()}/emulator/`);
             await exec(`ls ${this.androidHome()}/emulator/qemu/`);
 
-            await exec(`du -h ../../entitlements.xml`);
-            await exec(`mv ../../entitlements.xml ${this.qemuPath()}`);
-
             await exec(`cd ${this.qemuPath()}`);
+
+            this.createHyperVisorEntitlement();
+            await exec(`du -h entitlements.xml`);
+
             await execIgnoreFailure(`codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64;
             codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64-headless;`)
             await exec(`cd -`)

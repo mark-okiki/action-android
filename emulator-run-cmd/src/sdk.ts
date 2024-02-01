@@ -161,7 +161,7 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
             await exec(`ls ${this.androidHome()}/emulator/`);
             await exec(`ls ${this.androidHome()}/emulator/qemu/`);
 
-            await exec(`cd ${this.qemuPath()}`);
+            //await exec(`cd ${this.qemuPath()}`);
 
             this.createHyperVisorEntitlement();
             await exec(`du -h entitlements.xml`);
@@ -170,7 +170,8 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
 
             await execIgnoreFailure(`codesign -s - --entitlements entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64-headless;
             codesign -s - --entitlements entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64;`)
-            await exec(`cd -`)
+            
+            // await exec(`cd -`)
             return true;
         } catch (e) {
             return false

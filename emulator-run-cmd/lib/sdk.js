@@ -154,8 +154,11 @@ class BaseAndroidSdk {
                 yield (0, exec_with_result_1.execIgnoreFailure)(`ls ../../`);
                 yield (0, exec_1.exec)(`ls ${this.qemuPath()}/`);
                 this.createHyperVisorEntitlement();
-                yield (0, exec_with_result_1.execIgnoreFailure)(`codesign -s - --entitlements  ${this.qemuPath()}/entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64-headless;
-            codesign -s - --entitlements  ${this.qemuPath()}/entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64;`);
+                const codeSignCommand = `codesign -s - --entitlements  ${this.qemuPath()}/entitlements.xml --force ${this.qemuPath()}/`;
+                yield (0, exec_with_result_1.execIgnoreFailure)(`${codeSignCommand}qemu-system-aarch64-headless;
+            ${codeSignCommand}qemu-system-aarch64;
+            ${codeSignCommand}qemu-system-armel;
+            ${codeSignCommand}qemu-system-armel-headless;`);
                 yield (0, exec_1.exec)(`ls  ${this.qemuPath()}/`);
                 // await exec(`cd -`)
                 return true;

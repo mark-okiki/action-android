@@ -161,9 +161,12 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
             await exec(`ls ${this.qemuPath()}/`);
 
             this.createHyperVisorEntitlement();        
+            const codeSignCommand = `codesign -s - --entitlements  ${this.qemuPath()}/entitlements.xml --force ${this.qemuPath()}/`
 
-            await execIgnoreFailure(`codesign -s - --entitlements  ${this.qemuPath()}/entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64-headless;
-            codesign -s - --entitlements  ${this.qemuPath()}/entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64;`)
+            await execIgnoreFailure(`${codeSignCommand}qemu-system-aarch64-headless;
+            ${codeSignCommand}qemu-system-aarch64;
+            ${codeSignCommand}qemu-system-armel;
+            ${codeSignCommand}qemu-system-armel-headless;`)
             await exec(`ls  ${this.qemuPath()}/`);
             
             // await exec(`cd -`)

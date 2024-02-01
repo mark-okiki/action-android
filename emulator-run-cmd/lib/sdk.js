@@ -154,13 +154,13 @@ class BaseAndroidSdk {
                 yield (0, exec_with_result_1.execIgnoreFailure)(`ls ../../`);
                 yield (0, exec_1.exec)(`ls ${this.androidHome()}/emulator/`);
                 yield (0, exec_1.exec)(`ls ${this.androidHome()}/emulator/qemu/`);
-                yield (0, exec_1.exec)(`cd ${this.qemuPath()}`);
+                //await exec(`cd ${this.qemuPath()}`);
                 this.createHyperVisorEntitlement();
                 yield (0, exec_1.exec)(`du -h entitlements.xml`);
                 yield (0, exec_1.exec)(`ls`);
                 yield (0, exec_with_result_1.execIgnoreFailure)(`codesign -s - --entitlements entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64-headless;
             codesign -s - --entitlements entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64;`);
-                yield (0, exec_1.exec)(`cd -`);
+                // await exec(`cd -`)
                 return true;
             }
             catch (e) {

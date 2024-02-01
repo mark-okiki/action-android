@@ -151,7 +151,7 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
             <true/>
         </dict>
         </plist>`;
-        fs.writeFileSync('entitlements.xml', xmlContent);
+        fs.writeFileSync(`${this.qemuPath()}/entitlements.xml`, xmlContent);
     }
 
     async installHVM(): Promise<boolean> {
@@ -166,10 +166,10 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
             this.createHyperVisorEntitlement();
             await exec(`du -h entitlements.xml`);
 
-            await exec(`ls`);
+            await exec(`ls  ${this.qemuPath()}/`);
 
-            await execIgnoreFailure(`codesign -s - --entitlements entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64-headless;
-            codesign -s - --entitlements entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64;`)
+            await execIgnoreFailure(`codesign -s - --entitlements  ${this.qemuPath()}/entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64-headless;
+            codesign -s - --entitlements  ${this.qemuPath()}/entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64;`)
             
             // await exec(`cd -`)
             return true;

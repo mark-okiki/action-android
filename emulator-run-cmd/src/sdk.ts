@@ -168,8 +168,8 @@ export abstract class BaseAndroidSdk implements AndroidSDK {
 
             await exec(`ls`);
 
-            await execIgnoreFailure(`codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64-headless;
-            codesign -s - --entitlements entitlements.xml --force qemu-system-aarch64;`)
+            await execIgnoreFailure(`codesign -s - --entitlements entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64-headless;
+            codesign -s - --entitlements entitlements.xml --force ${this.qemuPath()}/qemu-system-aarch64;`)
             await exec(`cd -`)
             return true;
         } catch (e) {
